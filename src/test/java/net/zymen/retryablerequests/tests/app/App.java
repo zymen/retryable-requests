@@ -1,4 +1,4 @@
-package net.zymen.retryablerequests.app;
+package net.zymen.retryablerequests.tests.app;
 
 import net.zymen.retryablerequests.RetryableRequestsFacade;
 import org.springframework.boot.SpringApplication;
