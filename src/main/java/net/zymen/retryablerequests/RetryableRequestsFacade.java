@@ -1,5 +1,6 @@
 package net.zymen.retryablerequests;
 
+import net.zymen.retryablerequests.storage.InMemoryResponseStorage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -13,7 +14,8 @@ public class RetryableRequestsFacade {
             RequestMappingHandlerMapping requestMappingHandlerMapping) {
 
         return new CacheResponseRequestFilter(
-            new RequestToChecksumService(),
+                new RequestToChecksumService(),
+                new InMemoryResponseStorage(),
                 requestMappingHandlerMapping);
     }
 }

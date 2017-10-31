@@ -24,9 +24,13 @@ class IntegrationTests extends Specification {
         "http://localhost:8090" + path
     }
 
-    def "should return the same results for the same request"() {
+    def "should return the same results for the same request on endpoint with @RetryRequest annotation"() {
         given: "there is some call to endpoint"
-        def restQuery = { -> restTemplate.postForEntity(buildUrl("/test"), [], User.class) }
+        def restQuery = {
+            -> restTemplate.postForEntity(
+                    buildUrl("/random-data/user-with-annotation"), [], User.class
+            )
+        }
 
         when: "asking for a first time"
         def response1 = restQuery()

@@ -15,11 +15,11 @@ class RequestToChecksumService {
     private static final Logger log = getLogger(RequestToChecksumService.class);
 
     String requestToChecksum(HttpServletRequest request) {
-        try {
-            log.info("Parts: {}", request.getParts());
-        } catch (IOException | ServletException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            log.info("Parts: {}", request.getParts());
+//        } catch (IOException | ServletException e) {
+//            e.printStackTrace();
+//        }
 
         return request.getRequestURI();
     }

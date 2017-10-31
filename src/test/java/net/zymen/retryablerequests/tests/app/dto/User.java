@@ -58,4 +58,13 @@ public class User {
         result = 31 * result + (getAge() != null ? getAge().hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", login='" + login + '\'' +
+                ", age=" + age +
+                '}';
+    }
 }

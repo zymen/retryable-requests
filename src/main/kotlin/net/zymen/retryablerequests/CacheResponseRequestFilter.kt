@@ -1,6 +1,7 @@
 package net.zymen.retryablerequests;
 
 import net.zymen.retryablerequests.annotations.RetryableRequest
+import net.zymen.retryablerequests.storage.ResponseStorage
 import org.slf4j.LoggerFactory
 import org.springframework.web.filter.OncePerRequestFilter
 import org.springframework.web.method.HandlerMethod
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse
 
 internal class CacheResponseRequestFilter(
         private val requestToChecksumService: RequestToChecksumService,
+        private val responseStorage: ResponseStorage,
         private val requestMappingHandlerMapping: RequestMappingHandlerMapping
 ) : OncePerRequestFilter() {
 
@@ -24,15 +26,36 @@ internal class CacheResponseRequestFilter(
             if (handlerMethod is HandlerMethod) {
                 log.info("Has annotation {}", handlerMethod.hasMethodAnnotation(RetryableRequest::class.java))
                 log.info("test {}", requestMappingHandlerMapping.getHandler(request))
+
+                val key = requestToChecksumService.requestToChecksum(request);
+                log.info("key - {}", key);
+
+                if (responseStorage.hasKey(key)) {
+                    replayRecordedResponse(key, response)
+                } else {
+                    recordResponse(response, filterChain, request, key)
+                }
+            } else {
+                filterChain.doFilter(request, response)
             }
         } catch (e: Exception) {
             log.error("errr", e);
         }
+    }
 
-        val key = requestToChecksumService.requestToChecksum(request);
-        log.info("key - {}", key);
+    private fun recordResponse(response: HttpServletResponse, filterChain: FilterChain, request: HttpServletRequest, key: String) {
+        val servletResponse = ResponseRecorderWrapper(response)
+        filterChain.doFilter(request, servletResponse)
 
-        filterChain.doFilter(request, ResponseRecorderWrapper(response));
+        responseStorage.set(key, servletResponse.recordedContent)
+    }
+
+    private fun replayRecordedResponse(key: String, response: HttpServletResponse) {
+        val content = responseStorage.get(key)
+        log.info("Found content for key ${key} - ${content}")
+
+        response.outputStream.write(content.toByteArray())
+        response.addHeader("Content-Type", "application/json")
     }
 
     companion object {
