@@ -5,3 +5,5 @@ before_install:
   - sudo apt-get -qq update
 script:
   - ./gradlew test -i
+after_success:
+  - ./gradlew jacocoTestReport coveralls
