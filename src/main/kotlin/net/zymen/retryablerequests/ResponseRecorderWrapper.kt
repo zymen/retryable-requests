@@ -14,9 +14,8 @@ internal class ResponseRecorderWrapper(response: HttpServletResponse?) : HttpSer
     }
 
     val recordedContent: String
-        get() {
-            return recordedOutputStream!!.content
-        }
+        get() = recordedOutputStream!!.content
+
 
     override fun getOutputStream(): ServletOutputStream {
         return recordedOutputStream!!;

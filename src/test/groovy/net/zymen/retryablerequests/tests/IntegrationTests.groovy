@@ -44,4 +44,25 @@ class IntegrationTests extends Specification {
         then: "it should return the same results"
         response1.body == response2.body
     }
+
+    def "should return different results for the same request on endpoint without @RetryRequest annotation"() {
+        given: "there is some call to endpoint"
+        def restQuery = {
+            -> restTemplate.getForEntity(
+                    buildUrl("/random-data/user-without-annotation"), User.class
+            )
+        }
+
+        when: "asking for a first time"
+        def response1 = restQuery()
+
+        then: "it should return some response"
+        response1.statusCode == HttpStatus.OK
+
+        when: "asking for it second time"
+        def response2 = restQuery()
+
+        then: "it should return different results"
+        response1.body != response2.body
+    }
 }
