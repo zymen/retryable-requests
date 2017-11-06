@@ -23,7 +23,8 @@ internal class CacheResponseRequestFilter(
         try {
             val handlerMethod = requestMappingHandlerMapping.getHandler(request).getHandler()
 
-            if (handlerMethod is HandlerMethod) {
+            if (handlerMethod is HandlerMethod &&
+                    handlerMethod.hasMethodAnnotation(RetryableRequest::class.java)) {
                 log.info("Has annotation {}", handlerMethod.hasMethodAnnotation(RetryableRequest::class.java))
                 log.info("test {}", requestMappingHandlerMapping.getHandler(request))
 
