@@ -11,7 +11,7 @@ public class RetryableRequestsFacade {
 
     @Bean
     public OncePerRequestFilter createCacheResponseRequestFilter(
-            RequestMappingHandlerMapping requestMappingHandlerMapping) {
+            final RequestMappingHandlerMapping requestMappingHandlerMapping) {
 
         return new CacheResponseRequestFilter(
                 new RequestToChecksumService(),

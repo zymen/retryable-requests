@@ -21,20 +21,25 @@ internal class CacheResponseRequestFilter(
                                   filterChain: FilterChain) {
 
         try {
-            val handlerMethod = requestMappingHandlerMapping.getHandler(request).getHandler()
+            val handlerExecutionChain = requestMappingHandlerMapping.getHandler(request)
 
-            if (handlerMethod is HandlerMethod &&
-                    handlerMethod.hasMethodAnnotation(RetryableRequest::class.java)) {
-                log.info("Has annotation {}", handlerMethod.hasMethodAnnotation(RetryableRequest::class.java))
-                log.info("test {}", requestMappingHandlerMapping.getHandler(request))
+            if (handlerExecutionChain != null) {
+                val handlerMethod = handlerExecutionChain.handler
 
-                val key = requestToChecksumService.requestToChecksum(request);
-                log.info("key - {}", key);
+                if (handlerMethod is HandlerMethod &&
+                        handlerMethod.hasMethodAnnotation(RetryableRequest::class.java)) {
+                    log.info("Has annotation {}", handlerMethod.hasMethodAnnotation(RetryableRequest::class.java))
 
-                if (responseStorage.hasKey(key)) {
-                    replayRecordedResponse(key, response)
+                    val key = requestToChecksumService.requestToChecksum(request);
+                    log.info("key - {}", key);
+
+                    if (responseStorage.hasKey(key)) {
+                        replayRecordedResponse(key, response)
+                    } else {
+                        recordResponse(response, filterChain, request, key)
+                    }
                 } else {
-                    recordResponse(response, filterChain, request, key)
+                    filterChain.doFilter(request, response)
                 }
             } else {
                 filterChain.doFilter(request, response)
