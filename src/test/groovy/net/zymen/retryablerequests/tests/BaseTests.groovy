@@ -18,8 +18,16 @@ class BaseTests extends Specification {
 
     protected RestTemplate restTemplate = new RestTemplate()
 
-    def buildUrl(String path) {
-        "http://localhost:8090" + path
+    def buildUrl(String path, Map<String, String> queryParams = [:]) {
+        def content = new StringBuilder("http://localhost:8090")
+        content.append(path)
+
+        if (queryParams.size() > 0) {
+            content.append("?")
+            queryParams.each { content.append(it.key).append("=").append(it.value).append("&") }
+        }
+
+        return content.toString()
     }
 
     def multipleCallsShouldReturnTheSameBodies(call) {

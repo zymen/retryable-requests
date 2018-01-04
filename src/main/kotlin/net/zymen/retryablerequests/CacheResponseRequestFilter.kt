@@ -28,15 +28,19 @@ internal class CacheResponseRequestFilter(
 
                 if (handlerMethod is HandlerMethod &&
                         handlerMethod.hasMethodAnnotation(RetryableRequest::class.java)) {
-                    log.info("Has annotation {}", handlerMethod.hasMethodAnnotation(RetryableRequest::class.java))
 
-                    val key = requestToChecksumService.requestToChecksum(request);
-                    log.info("key - {}", key);
+                    val myServletRequest = MyRequestWrapper(request)
 
-                    if (responseStorage.hasKey(key)) {
-                        replayRecordedResponse(key, response)
+                    val annotation = handlerMethod.getMethodAnnotation(RetryableRequest::class.java)
+                    log.info("Has annotation {}", annotation)
+
+                    val requestKey = requestToChecksumService.requestToChecksum(myServletRequest, annotation);
+                    log.debug("Request key - {}", requestKey);
+
+                    if (responseStorage.hasKey(requestKey)) {
+                        replayRecordedResponse(requestKey, response)
                     } else {
-                        recordResponse(response, filterChain, request, key)
+                        recordResponse(response, filterChain, myServletRequest, requestKey)
                     }
                 } else {
                     filterChain.doFilter(request, response)

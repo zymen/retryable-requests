@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import static net.zymen.retryablerequests.retryableby.RetryableBy.QUERY_PARAMS;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -24,7 +25,7 @@ public class RandomDataController {
 
     private final Random random = new SecureRandom();
 
-    @RequestMapping( value = "/user-without-annotation", method = GET)
+    @RequestMapping(value = "/user-without-annotation", method = GET)
     public User user() {
         return new User(
                 stringGenerator.generate(5),
@@ -33,9 +34,9 @@ public class RandomDataController {
         );
     }
 
-    @RetryableRequest
+    @RetryableRequest(retryableBy = QUERY_PARAMS)
     @RequestMapping(value = "/user-with-annotation", method = POST)
-    public User user(@RequestBody String input) {
+    public User user(@RequestBody final String input) {
         return new User(
                 stringGenerator.generate(5),
                 stringGenerator.generate(10),

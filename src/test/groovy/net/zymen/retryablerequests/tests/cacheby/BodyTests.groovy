@@ -5,17 +5,14 @@ import net.zymen.retryablerequests.tests.app.dto.CodeDto
 
 import static net.zymen.retryablerequests.tests.app.data.RandomDataSupplier.randomString
 
-class QueryParamsTests extends BaseTests {
+class BodyTests extends BaseTests {
 
     def "should return the same result for the same query params"() {
         when: "there is some call to endpoint with query params"
         def restQuery = {
             ->
-            def params = ["q1": "abc", "q2": "exz"]
-
-            restTemplate.getForEntity(
-                    buildUrl("/random-data/cache-by/query-params", params), CodeDto.class
-            )
+            def data = ["content": "abc"]
+            restTemplate.postForEntity(buildUrl("/random-data/cache-by/body"), data, CodeDto.class)
         }
 
         then:
@@ -26,11 +23,8 @@ class QueryParamsTests extends BaseTests {
         when: "there is some call to endpoint with query params"
         def restQuery = {
             ->
-            def params = ["q1": randomString(5), "q2": randomString(5)]
-
-            restTemplate.getForEntity(
-                    buildUrl("/random-data/cache-by/query-params", params), CodeDto.class
-            )
+            def data = ["content": randomString(5)]
+            restTemplate.postForEntity(buildUrl("/random-data/cache-by/body"), data, CodeDto.class)
         }
 
         then:
