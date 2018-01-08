@@ -32,10 +32,10 @@ internal class CacheResponseRequestFilter(
                     val myServletRequest = MyRequestWrapper(request)
 
                     val annotation = handlerMethod.getMethodAnnotation(RetryableRequest::class.java)
-                    log.info("Has annotation {}", annotation)
+                    log.info("Has annotation $annotation")
 
                     val requestKey = requestToChecksumService.requestToChecksum(myServletRequest, annotation);
-                    log.debug("Request key - {}", requestKey);
+                    log.debug("Request key - $requestKey");
 
                     if (responseStorage.hasKey(requestKey)) {
                         replayRecordedResponse(requestKey, response)
@@ -62,7 +62,7 @@ internal class CacheResponseRequestFilter(
 
     private fun replayRecordedResponse(key: String, response: HttpServletResponse) {
         val content = responseStorage.get(key)
-        log.info("Found content for key ${key} - ${content}")
+        log.info("Found content for key $key - $content")
 
         response.outputStream.write(content.toByteArray())
         response.addHeader("Content-Type", "application/json")
