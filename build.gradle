@@ -1,13 +1,13 @@
 buildscript {
     ext {
-		springBootVersion = '1.5.8.RELEASE'
+        springBootVersion = '1.5.8.RELEASE'
         kotlinVersion = '1.1.51'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
@@ -25,12 +25,12 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	compile "org.springframework.boot:spring-boot-starter:${springBootVersion}"
-	compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
 
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
@@ -40,7 +40,7 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.2.1'
+    gradleVersion = '4.7'
 }
 
 compileKotlin {
