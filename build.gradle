@@ -34,7 +34,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
 
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-    testCompile group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4-rc-4'
+    testCompile group: 'org.spockframework', name: 'spock-core', version: '2.4-M1-groovy-4.0'
     testCompile group: 'org.spockframework', name: 'spock-spring', version: '1.1-groovy-2.4-rc-4'
     testCompile 'org.apache.commons:commons-text:1.10.0'
 }
